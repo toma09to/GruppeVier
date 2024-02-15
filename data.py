@@ -1,13 +1,32 @@
+import sqlite3
+
 class Data:
     def __init__(self):
-        self.content1 = "これはテスト"
-        self.content2 = "です"
-        self.count = 0
+        self.filename = 'data.db'
+        self.id = 0
+
+    def getData(self):
+        con = sqlite3.connect(self.filename)
+        cur = con.cursor()
+
+        cur.execute(f'SELECT * FROM data WHERE id = {self.id}')
+        ret = cur.fetchone()
+
+        cur.close()
+        con.close()
+
+        return ret
+
     def txt(self):
-        return self.content1 + str(self.count) + self.content2
+        return self.getData()[1]
+
     def yes(self):
-        self.count += 1
+        next_id = self.getData()[2]
+        self.id = next_id
+
     def no(self):
-        self.count += 2
+        next_id = self.getData()[3]
+        self.id = next_id
+
     def isQuestion(self):
-        return self.count < 5
+        return self.getData()[4] == 1
